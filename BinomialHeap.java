@@ -104,6 +104,7 @@ public class BinomialHeap
 					Start_heap1=Start_heap1.next;//go to next node in self
 					PervNode=PervNode.next;
 				}
+				Tmp.next=PervNode.next.next;//updates the position of the node
 				PervNode.next=Tmp;//updates the position of the node
 			}
 			Start_Heap2=Start_Heap2.next;//next node in heap2 to start the same procces
