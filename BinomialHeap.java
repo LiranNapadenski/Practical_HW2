@@ -85,25 +85,27 @@ public class BinomialHeap
 			HeapNode Start_heap1 = this.last.next;//the current node in self - starts from first
 			HeapNode PervNode=this.last;// perv to the current note
 			HeapNode Tmp = Start_Heap2;// the current node in heap 2 is Tmp because can be melded and dont want to loose corrent pos
-			boolean Didnt_Was_At_last=true;//this bool is inorder to prevent infinite loop when tmp.rank is higher then any node's rank in self
-			//if already was at the last node in self then there is no need to return to first
-			while(Tmp.rank>=Start_heap1.rank &&Didnt_Was_At_last ) {//go next until the rank of node in self is higher or got to the end
-				if(Tmp.rank==Start_heap1.rank) {//if rank the same then meld
-					Tmp=Start_heap1.Meld_nodes(Tmp);//meld and tmp.rank++ 
-				}
-				if(Start_heap1==this.last) {//finished with the last node in self
-					Didnt_Was_At_last=false;
-					this.last=Tmp;//updates this.last becuase was bigger or equal to last's rank
-				}
-				Start_heap1=Start_heap1.next;//go to next node in self
-				PervNode=PervNode.next;
-			}
 			if(Tmp.rank<Start_heap1.rank) {//if the node's rank smaller then the lowest node rank in self
 				HeapNode fisrt=this.last;
 				Tmp.next=fisrt;
 				this.last.next=Tmp;
 			}
-			PervNode.next=Tmp;//updates the position of the node
+			else {
+				boolean Didnt_Was_At_last=true;//this bool is inorder to prevent infinite loop when tmp.rank is higher then any node's rank in self
+				//if already was at the last node in self then there is no need to return to first
+				while(Tmp.rank>=Start_heap1.rank &&Didnt_Was_At_last ) {//go next until the rank of node in self is higher or got to the end
+					if(Tmp.rank==Start_heap1.rank) {//if rank the same then meld
+						Tmp=Start_heap1.Meld_nodes(Tmp);//meld and tmp.rank++ 
+					}
+					if(Start_heap1==this.last) {//finished with the last node in self
+						Didnt_Was_At_last=false;
+						this.last=Tmp;//updates this.last becuase was bigger or equal to last's rank
+					}
+					Start_heap1=Start_heap1.next;//go to next node in self
+					PervNode=PervNode.next;
+				}
+				PervNode.next=Tmp;//updates the position of the node
+			}
 			Start_Heap2=Start_Heap2.next;//next node in heap2 to start the same procces
 			first_time_in_first=false;// already melded the first node
 		}
