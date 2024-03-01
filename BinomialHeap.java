@@ -20,6 +20,25 @@ public class BinomialHeap
 		this.size=1;
 	}
 	
+	/**
+	 * with all the given data , if min is null find min by himself
+	 */
+	public BinomialHeap(HeapNode last,HeapNode min , int size) {
+		if (last==null || size==0) {//Creates an empty tree
+			this.size=0;
+			this.last=null;
+			this.min=null;
+		}
+		else {
+			this.size=size;
+			this.last=last;
+			this.min=min;
+			if (min==null) {//if min wasnt given update min
+				this.Update_Min();
+			}
+		}
+	}
+	
 
 	/**
 	 * 
@@ -33,7 +52,7 @@ public class BinomialHeap
 		BinomialHeap New_BinomialHeap = new BinomialHeap(key , info);
 		HeapItem item = New_BinomialHeap.last.item;
 		this.meld(New_BinomialHeap);
-		return item; // should be replaced by student code
+		return item;
 	}
 
 	/**
@@ -43,6 +62,13 @@ public class BinomialHeap
 	 */
 	public void deleteMin()
 	{
+		HeapNode MinNode = this.min;//the node to disconnect
+		this.Disconnect(MinNode);//disconnects
+		HeapNode Child_Of_Min = MinNode.child;
+		Child_Of_Min.parent=null;
+		BinomialHeap Heap_To_Meld= new BinomialHeap(Child_Of_Min , null , MinNode.rank);//creates an heap with the subtrees of min node as Nodes
+		this.Update_Min();//updates the minimum for this
+		this.meld(Heap_To_Meld);//Meld this with the new heap
 		return; // should be replaced by student code
 
 	}
@@ -55,7 +81,29 @@ public class BinomialHeap
 	public HeapItem findMin()
 	{
 		return this.min.item; // should be replaced by student code
-	} 
+	}
+	
+	
+	/**
+	 * updates the minimum if min is unknown
+	 */
+	public void Update_Min() {
+		if(this.last==null) {//if the tree is empty
+			this.min=null;
+			return;
+		}
+		HeapNode New_Min=this.last;
+		HeapNode CurrentNode=this.last;
+		do {
+			if(CurrentNode.item.key<New_Min.item.key) {
+				New_Min=CurrentNode;
+			}
+			CurrentNode=CurrentNode.next;
+		}while(CurrentNode!=this.last);
+		this.min=New_Min;
+		return;
+	}
+	
 
 	/**
 	 * 
@@ -156,23 +204,32 @@ public class BinomialHeap
 	
 	/**
 	 * disconnects the first node(tree) from heap and returns the node
+	 * @pre:!this.Empty()
 	 */
 	public HeapNode Disconnect_First() {
+		HeapNode FirstNode=this.last.next;
+		this.Disconnect(FirstNode);
+		return FirstNode;
+	}
+	
+	/**
+	 * Disconnects a given node from a tree and return the node
+	 * @return
+	 */
+	public HeapNode Disconnect(HeapNode Node) {
 		if (this.size ==1) {//if the heap has only 1 tree
-			HeapNode FirstNode=this.last;
 			this.last=null;
 			this.size=0;
 			this.min=null;
-			return FirstNode;
+			return Node;
 		}
-		HeapNode FirstNode=this.last.next;
-		HeapNode PrevFirst = FirstNode.prev;
-		HeapNode NextFirst = FirstNode.next;
+		HeapNode PrevFirst = Node.prev;
+		HeapNode NextFirst = Node.next;
 		//disconnected the node
 		PrevFirst.next=NextFirst;
 		NextFirst.prev=PrevFirst;
 		this.size--;//updates the size
-		return FirstNode;
+		return Node;
 	}
 
 	/**
