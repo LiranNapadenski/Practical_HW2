@@ -104,6 +104,21 @@ public class BinomialHeap
 		return;
 	}
 	
+	/**
+	 * heapfys up a given node
+	 */
+	
+	public void Heapfy_Up(HeapNode Node) {
+		while(Node.parent!=null) {
+			if (Node.parent.item.key>=Node.item.key) {//if parent is larger then node switch
+				Node=Node.Switch_Nodes(Node.parent);//switches
+			}
+			else {//if its okey there is no reason to go up
+				break;
+			}
+		}
+	}
+	
 
 	/**
 	 * 
@@ -114,7 +129,10 @@ public class BinomialHeap
 	 */
 	public void decreaseKey(HeapItem item, int diff) 
 	{    
-		return; // should be replaced by student code
+		item.key=item.key-diff;
+		HeapNode Node_Of_Item=item.node;
+		this.Heapfy_Up(Node_Of_Item);
+		return;
 	}
 
 	/**
@@ -124,7 +142,11 @@ public class BinomialHeap
 	 */
 	public void delete(HeapItem item) 
 	{    
-		return; // should be replaced by student code
+		this.decreaseKey(item,item.key);//the node is now head of a tree therfore it can be deleted like DeleteMin
+		HeapNode DNode = item.node;//the node i need to delete
+		this.min=DNode;
+		this.deleteMin();
+		return;
 	}
 
 	/**
@@ -328,6 +350,19 @@ public class BinomialHeap
 			//updating the rank
 			New_Head.rank++;
 			return New_Head;
+		}
+		
+		/**
+		 * get another node and switch the physical place of this with other and returns this in its new placement
+		 * 
+		 */
+		public HeapNode Switch_Nodes(HeapNode OtherNode) {
+			HeapItem OtherItem=OtherNode.item;
+			OtherNode.item=this.item;
+			OtherNode.item.node=OtherNode;
+			this.item=OtherItem;
+			this.item.node=this;
+			return OtherNode;
 		}
 	}
 
