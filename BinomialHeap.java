@@ -39,6 +39,10 @@ public class BinomialHeap
 		}
 	}
 	
+	public HeapNode getLast() {
+		return this.last;
+	}
+	
 
 	/**
 	 * 
@@ -183,7 +187,7 @@ public class BinomialHeap
 			this.size++;//updates the size
 			while(Array_Of_Nodes[Node_To_Meld.rank]!=null) {//if the heap(array) has a node with the same rank melds between them and empty the place the in the array
 				int NodeToMeld_Rank = Node_To_Meld.rank;
-				Node_To_Meld=Array_Of_Nodes[NodeToMeld_Rank].Meld_Tow_Node(Node_To_Meld);//melds the node and returns the melded node
+				Node_To_Meld=Array_Of_Nodes[NodeToMeld_Rank].Link(Node_To_Meld);//melds the node and returns the melded node
 				Array_Of_Nodes[NodeToMeld_Rank]=null;//now its null
 				}
 			Array_Of_Nodes[Node_To_Meld.rank]=Node_To_Meld;//the node doesnt have who to meld with and just inserted in its place in the array
@@ -316,7 +320,7 @@ public class BinomialHeap
 		 * @pre this.rank==other.rank
 		 * @ret@type= HeapNode
 		 */
-		public HeapNode Meld_Tow_Node(HeapNode other) {
+		public HeapNode Link(HeapNode other) {
 			if (other == null) {
 				return this;
 			}
@@ -364,6 +368,28 @@ public class BinomialHeap
 			this.item.node=this;
 			return OtherNode;
 		}
+		//for testing
+		public HeapItem getItem() {
+			return this.item;
+		}
+		public HeapNode getNext() {
+			return this.next;
+		}
+		public int getRank() {
+			return this.rank;
+		}
+		public HeapNode getChild() {
+			return this.child;
+		}
+		public void setChild(HeapNode child) {
+			this.child=child;
+		}
+		public void setNext(HeapNode next) {
+			this.next=next;
+		}
+		public void setRank(int rank) {
+			this.rank=rank;
+		}
 	}
 
 	/**
@@ -382,6 +408,10 @@ public class BinomialHeap
 			this.key=key;
 			this.info=info;
 			this.node=node;
+		}
+		//for testing
+		public int getKey() {
+			return this.key;
 		}
 	}
 
