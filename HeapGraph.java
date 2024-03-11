@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 
-@SuppressWarnings("serial")
 public class HeapGraph extends Canvas
 {
     public BinomialHeap heap;
@@ -29,16 +28,17 @@ public class HeapGraph extends Canvas
 
     public void paintHeap(BinomialHeap heap, Graphics g, int y)
     {
+        int height = Math.min(this.getHeight() / (heap.getLast().getRank() + 1), 150);
         int unit = this.getWidth() / rankSum(heap);
         BinomialHeap.HeapNode tree = heap.getLast().getNext();
         int lastBorder = tree.getRank() * unit;
         if (lastBorder == 0)
             lastBorder = unit;
-        paintTree(tree, g, 0, lastBorder, y);
+        paintTree(tree, g, 0, lastBorder, y, height);
         while (!tree.equals(heap.getLast()))
         {
             tree = tree.getNext();
-            paintTree(tree, g, lastBorder, lastBorder + tree.getRank() * unit, y);
+            paintTree(tree, g, lastBorder, lastBorder + tree.getRank() * unit, y, height);
             lastBorder += tree.getRank() * unit;
         }
     }
@@ -60,7 +60,7 @@ public class HeapGraph extends Canvas
         node.setRank(node.getRank() + 1);
     }
 
-    public void paintTree(BinomialHeap.HeapNode node, Graphics g, int in, int out, int y)
+    public void paintTree(BinomialHeap.HeapNode node, Graphics g, int in, int out, int y, int h)
     {
         int mid = (in + out) / 2;
         if (node.getRank() == 0)
@@ -75,20 +75,20 @@ public class HeapGraph extends Canvas
         else if (node.getRank() == 1)
         {
             BinomialHeap.HeapNode branch = node.getChild();
-            paintTree(branch, g, in, out, y + 150);
+            paintTree(branch, g, in, out, y + h, h);
             retrieve(node);
-            paintTree(node, g, in, out, y);
+            paintTree(node, g, in, out, y, h);
             connect(node, branch);
-            g.drawLine(mid, y + 50, mid, y + 150);
+            g.drawLine(mid, y + 50, mid, y + h);
         }
         else
         {
             int hOffset = (out - in) / (int)Math.pow(2, node.getRank());
             BinomialHeap.HeapNode branch = node.getChild();
-            g.drawLine(mid - hOffset, y + 175, out - hOffset, y + 25);
-            paintTree(branch, g, in, mid, y + 150);
+            g.drawLine(mid - hOffset, y + h + 25, out - hOffset, y + 25);
+            paintTree(branch, g, in, mid, y + h, h);
             retrieve(node);
-            paintTree(node, g, mid, out, y);
+            paintTree(node, g, mid, out, y, h);
             connect(node, branch);
 
         }
