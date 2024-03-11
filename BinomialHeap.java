@@ -1,3 +1,5 @@
+import org.w3c.dom.Node;
+
 /**
  * BinomialHeap
  *
@@ -10,6 +12,12 @@ public class BinomialHeap
 	public HeapNode last;
 	public HeapNode min;
 	
+	
+	public BinomialHeap() {
+		this.size = 0;
+		this.last = null;
+		this.last = null;
+	}
 	/**
 	 * constructor with key and info
 	 */
@@ -160,7 +168,7 @@ public class BinomialHeap
 	 */
 	public void meld(BinomialHeap heap2)
 	{
-		if(heap2.empty() || heap2==null ) {//if heap size is 0 or None
+		if(heap2.empty() || heap2==null ) {//if heap size is 0 or Null
 			return;
 		}
 		
@@ -170,12 +178,13 @@ public class BinomialHeap
 			this.last=heap2.last;
 			return;
 		}
-		
-		HeapNode[] Array_Of_Nodes = new HeapNode[Math.max(this.last.rank, heap2.last.rank)+2] ; //there could be k+1 different trees when k is the highest rank for both of the heaps
-		HeapNode Tmp_For_Insert=this.last;
+
+		int len_arr = Math.max((int)(Math.log(this.size) / Math.log(2)), (int)(Math.log(heap2.last.rank) / Math.log(2))) + 2;//there could be k+1 different trees when k is the highest rank for both of the heaps
+		HeapNode[] Array_Of_Nodes = new HeapNode[len_arr] ; 
+		HeapNode Tmp_For_Insert = this.last;
 		do {//inserting all the trees in this to an array were A[k] is the tree with rank k
-			Array_Of_Nodes[Tmp_For_Insert.rank]=Tmp_For_Insert;
-			Tmp_For_Insert=Tmp_For_Insert.next;
+			Array_Of_Nodes[Tmp_For_Insert.rank] = Tmp_For_Insert;
+			Tmp_For_Insert = Tmp_For_Insert.next;
 		}
 		while(Tmp_For_Insert!=this.last);
 		
@@ -185,11 +194,11 @@ public class BinomialHeap
 				this.min=Node_To_Meld;
 			}
 			this.size++;//updates the size
-			while(Array_Of_Nodes[Node_To_Meld.rank]!=null) {//if the heap(array) has a node with the same rank melds between them and empty the place the in the array
+			while(Array_Of_Nodes[Node_To_Meld.rank] != null) {//if the heap(array) has a node with the same rank melds between them and empty the place the in the array
 				int NodeToMeld_Rank = Node_To_Meld.rank;
 				Node_To_Meld=Array_Of_Nodes[NodeToMeld_Rank].Link(Node_To_Meld);//melds the node and returns the melded node
 				Array_Of_Nodes[NodeToMeld_Rank]=null;//now its null
-				}
+			}
 			Array_Of_Nodes[Node_To_Meld.rank]=Node_To_Meld;//the node doesnt have who to meld with and just inserted in its place in the array
 		}
 		//converts the array back to heap
@@ -289,6 +298,49 @@ public class BinomialHeap
 		return 0; // should be replaced by student code
 	}
 
+	//method to print, delete after
+	public void printHeap() {
+        if (this.min == null) {
+            System.out.println("Heap is empty.");
+            return;
+        }
+
+        System.out.println("Binomial Heap:");
+
+		HeapNode first_in_row = this.min;
+        HeapNode current = this.min;
+
+
+		do{
+			printTree(current, 0);
+            current = current.next;
+		}
+        while (current != first_in_row);
+    }
+// delete after
+    private void printTree(HeapNode root, int depth) {
+        // Print the root node with appropriate indentation
+        for (int i = 0; i < depth; i++) {
+            System.out.print("  ");
+		}
+
+        System.out.println(root.item.key);
+
+        // Recursively print the child trees
+		HeapNode first_in_row = root.child;
+        HeapNode child = root.child;
+
+		if (child == null){
+			return;
+		}
+
+		do{
+			printTree(child, depth + 1);
+            child = child.next;
+		}
+        while (child != first_in_row);
+	}
+
 	/**
 	 * Class implementing a node in a Binomial Heap.
 	 *  
@@ -302,16 +354,25 @@ public class BinomialHeap
 		public int rank;
 		
 		
+		public HeapNode() {
+			this.item = null;
+			this.child = null;
+			this.parent=null;
+			this.next = null;
+			this.prev = null;
+			this.rank = 0;
+		}
+		
 		/**
 		 * constructor
 		 */
 		public HeapNode(int key ,String info ) {
 			this.item= new HeapItem(key , info , this);
-			this.child=null;
-			this.parent=null;
-			this.next=this;
+			this.child = null;
+			this.parent = null;
+			this.next = this;
 			this.prev=this;
-			this.rank=0;
+			this.rank = 0;
 		}
 		
 		/**
@@ -328,7 +389,8 @@ public class BinomialHeap
 			HeapNode NextNode= this.next;
 			HeapNode New_Head; //the head will be the pionter returnd
 			HeapNode New_Child;
-			if (this.item.key>=other.item.key) {//the head will be node with the smaller key
+
+			if (this.item.key < other.item.key) {//the head will be node with the smaller key
 				New_Head=this;
 				New_Child=other;
 			}
@@ -336,15 +398,26 @@ public class BinomialHeap
 				New_Head=other;
 				New_Child=this;
 			}
+
+			if (PrevNode == New_Child){
+					PrevNode = PrevNode.prev; //skip this prev, take prev to prev (can be New Head itself or other sibling)
+				}
+				if (NextNode == New_Child){
+					NextNode = NextNode.next; //skip this next, take next to next (can be New Head itself or other sibling)
+				}
+
 			if(New_Head.rank!=0) {//if the rank isnt 0
 				//connecting the head of the tree to all the other nodes in his level.
 				New_Child.prev=New_Head.child.prev;
 				New_Head.child.prev.next=New_Child;
+
 				New_Child.next=New_Head.child;
-				New_Head.child.prev=New_Child;
+				New_Head.child.prev = New_Child;
+
 			}
-			//setting the New_Child as child
+			//new parent for the new child
 			New_Child.parent=New_Head;
+			//setting the New_Child as child to be first
 			New_Head.child=New_Child;
 			//returning the tree to the list
 			PrevNode.next=New_Head;
