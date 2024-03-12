@@ -179,8 +179,9 @@ public class BinomialHeap
 			return;
 		}
 
-		int len_arr = Math.max((int)(Math.log(this.size) / Math.log(2)), (int)(Math.log(heap2.last.rank) / Math.log(2))) + 2;//there could be k+1 different trees when k is the highest rank for both of the heaps
-		HeapNode[] Array_Of_Nodes = new HeapNode[len_arr] ; 
+		//int len_arr = Math.max((int)(Math.log(this.size) / Math.log(2)), (int)(Math.log(heap2.size) / Math.log(2))) + 2;//there could be k+1 different trees when k is the highest rank for both of the heaps
+		int len_arr = (int)(Math.log(this.size + heap2.size) / Math.log(2)) + 2;
+		HeapNode[] Array_Of_Nodes = new HeapNode[len_arr] ;
 		HeapNode Tmp_For_Insert = this.last;
 		do {//inserting all the trees in this to an array were A[k] is the tree with rank k
 			Array_Of_Nodes[Tmp_For_Insert.rank] = Tmp_For_Insert;
@@ -189,7 +190,7 @@ public class BinomialHeap
 		while(Tmp_For_Insert!=this.last);
 		
 		while (!heap2.empty()) {//if heap2 not empty because every run disconnects the first node
-			HeapNode Node_To_Meld=heap2.Disconnect_First(); // the node to Meld
+			HeapNode Node_To_Meld=heap2.disconnect_single_tree(heap2.last.next); // the node to Meld
 			if (Node_To_Meld.item.key<this.min.item.key) {//updates this.min if needed
 				this.min=Node_To_Meld;
 			}
@@ -264,6 +265,31 @@ public class BinomialHeap
 		PrevFirst.next=NextFirst;
 		NextFirst.prev=PrevFirst;
 		this.size--;//updates the size
+		return Node;
+	}
+
+	/**
+	 * Disconnects a given tree from a given root and return 
+	 * @post this is no longer functional heap!
+	 * @return
+	 */
+	public HeapNode disconnect_single_tree(HeapNode Node) {
+		if (this.size ==1) {//if the heap has only 1 tree
+			this.last=null;
+			this.size=0;
+			this.min=null;
+			return Node;
+		}
+		//Node has at least one sibling
+		if (this.min == Node) 
+			this.min = Node.next; //is it ok??? heap wont be functional anyway
+		if (this.last == Node)
+			this.last = Node.next; //needed for meld
+		Node.prev.next = Node.next;
+		Node.next.prev = Node.prev;
+		Node.prev = Node;
+		Node.next = Node;
+		this.size = this.size - (int)(Math.pow(2, Node.rank));
 		return Node;
 	}
 
@@ -385,8 +411,7 @@ public class BinomialHeap
 			if (other == null) {
 				return this;
 			}
-			HeapNode PrevNode= this.prev;
-			HeapNode NextNode= this.next;
+			
 			HeapNode New_Head; //the head will be the pionter returnd
 			HeapNode New_Child;
 
@@ -399,12 +424,15 @@ public class BinomialHeap
 				New_Child=this;
 			}
 
+			HeapNode PrevNode= New_Head.prev;
+			HeapNode NextNode= New_Head.next;
+
 			if (PrevNode == New_Child){
 					PrevNode = PrevNode.prev; //skip this prev, take prev to prev (can be New Head itself or other sibling)
 				}
-				if (NextNode == New_Child){
-					NextNode = NextNode.next; //skip this next, take next to next (can be New Head itself or other sibling)
-				}
+			if (NextNode == New_Child){
+				NextNode = NextNode.next; //skip this next, take next to next (can be New Head itself or other sibling)
+			}
 
 			if(New_Head.rank!=0) {//if the rank isnt 0
 				//connecting the head of the tree to all the other nodes in his level.
