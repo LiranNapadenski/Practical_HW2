@@ -194,7 +194,7 @@ public class BinomialHeap
 			if (Node_To_Meld.item.key<this.min.item.key) {//updates this.min if needed
 				this.min=Node_To_Meld;
 			}
-			this.size++;//updates the size
+			this.size = this.size + (int)(Math.pow(2, Node_To_Meld.rank));//updates the size
 			while(Array_Of_Nodes[Node_To_Meld.rank] != null) {//if the heap(array) has a node with the same rank melds between them and empty the place the in the array
 				int NodeToMeld_Rank = Node_To_Meld.rank;
 				Node_To_Meld=Array_Of_Nodes[NodeToMeld_Rank].Link(Node_To_Meld);//melds the node and returns the melded node

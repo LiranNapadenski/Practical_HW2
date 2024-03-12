@@ -22,17 +22,18 @@ public class Test {
 		insertKeyArray(heap2, new int[]{15, 35, 20, 31, 40, 43});
 		BinomialHeap heap3 = new BinomialHeap();
 		insertKeyArray(heap3, new int[]{7, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 100, 120});
+		System.out.println(heap3.size());
 		//HeapGraph.draw(heap2);
 		//HeapGraph.draw(heap3);
 		heap2.meld(heap3);
-		HeapGraph.draw(heap2);
+		//HeapGraph.draw(heap2);
 		//heap2.printHeap();
-		System.out.println(heap2.findMin().getKey());
+		System.out.println(heap2.size());
 	}
 	
 	public static void main(String[] args) {
 		//here you create the heap
-		test_insert();
-		//test_meld();
+		//test_insert();
+		test_meld();
 	}
 }
