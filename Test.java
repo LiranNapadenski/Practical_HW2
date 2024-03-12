@@ -6,6 +6,47 @@ public class Test {
         }
     }
 
+	public static void test_delete_min(){
+		BinomialHeap heap2 = new BinomialHeap();
+		insertKeyArray(heap2, new int[]{50, 60, 15, 35, 20, 31, 40, 43});
+		//HeapGraph.draw(heap2);
+		heap2.printHeap();
+		System.out.println(heap2.findMin().key);
+		System.out.println(heap2.size());
+		//HeapGraph.draw(heap2);
+		heap2.deleteMin();
+		//heap2.printHeap();
+		System.out.println(heap2.findMin().key);
+		System.out.println(heap2.size());
+		heap2.deleteMin();
+		//heap2.printHeap();
+		System.out.println(heap2.findMin().key);
+		System.out.println(heap2.size());
+		heap2.deleteMin();
+		System.out.println(heap2.findMin().key);
+		System.out.println(heap2.size());
+		heap2.printHeap();
+		heap2.deleteMin();
+		System.out.println(heap2.findMin().key);
+		System.out.println(heap2.size());
+		heap2.deleteMin();
+		heap2.printHeap();
+		System.out.println(heap2.findMin().key);
+		System.out.println(heap2.size());
+		heap2.deleteMin();
+		heap2.printHeap();
+		System.out.println(heap2.findMin().key);
+		System.out.println(heap2.size());
+		heap2.deleteMin();
+		heap2.printHeap();
+		System.out.println(heap2.findMin().key);
+		System.out.println(heap2.size());
+		heap2.deleteMin();
+		heap2.printHeap();
+		System.out.println(heap2.size());
+		//HeapGraph.draw(heap2);
+	}
+
 	public static void test_insert(){
 		BinomialHeap heap = new BinomialHeap();
 		insertKeyArray(heap, new int[]{35, 20, 31, 40, 43, 45, 50, 55, 15, 60, 65, 70, 75, 80, 85, 90, 19, 100, 120});
@@ -34,6 +75,7 @@ public class Test {
 	public static void main(String[] args) {
 		//here you create the heap
 		//test_insert();
-		test_meld();
+		//test_meld();
+		//test_delete_min();
 	}
 }

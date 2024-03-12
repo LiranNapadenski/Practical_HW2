@@ -74,12 +74,13 @@ public class BinomialHeap
 	 */
 	public void deleteMin()
 	{
-		HeapNode MinNode = this.min;//the node to disconnect
-		this.Disconnect(MinNode);//disconnects
-		HeapNode Child_Of_Min = MinNode.child;
-		Child_Of_Min.parent=null;
-		BinomialHeap Heap_To_Meld= new BinomialHeap(Child_Of_Min , null , MinNode.rank);//creates an heap with the subtrees of min node as Nodes
-		this.Update_Min();//updates the minimum for this
+		HeapNode MinNode = this.disconnect_single_tree(this.min);//the node and its subtree disconnected from heap
+		BinomialHeap Heap_To_Meld= new BinomialHeap(MinNode.child , null ,(int)(Math.pow(2, MinNode.rank))-1);//creates an heap with the subtrees of min node as Nodes
+		if (MinNode.child != null)
+			MinNode.child.parent = null;
+		MinNode.child = null;
+		
+		//this.Update_Min();//updates the minimum for this
 		this.meld(Heap_To_Meld);//Meld this with the new heap
 		return; // should be replaced by student code
 
