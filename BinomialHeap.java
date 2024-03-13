@@ -123,7 +123,7 @@ public class BinomialHeap
 	
 	public void Heapfy_Up(HeapNode Node) {
 		while(Node.parent!=null) {
-			if (Node.parent.item.key>=Node.item.key) {//if parent is larger then node switch
+			if (Node.parent.item.key != 0 && Node.parent.item.key>=Node.item.key) {//if parent is larger then node switch
 				Node=Node.Switch_Nodes(Node.parent);//switches
 			}
 			else {//if its okey there is no reason to go up

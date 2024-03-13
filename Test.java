@@ -1,3 +1,4 @@
+import BinomialHeap.HeapItem;
 
 public class Test {
 	static void insertKeyArray(BinomialHeap heap, int[] keys) {
@@ -5,6 +6,32 @@ public class Test {
             heap.insert(key, String.valueOf(key));
         }
     }
+	
+	public static void test_delete(){
+		BinomialHeap heap2 = new BinomialHeap();
+		insertKeyArray(heap2, new int[]{50, 60, 15, 35, 20, 31, 40, 43});
+		heap2.printHeap();
+		System.out.println("delete " + heap2.min.child.child.next.next.item.key);
+		heap2.delete(heap2.min.child.child.next.next.item);
+		System.out.println("new size: " + heap2.size());
+		
+		System.out.println("delete " + heap2.min.next.item.key);
+		heap2.delete(heap2.min.next.item);
+		System.out.println("new size: " + heap2.size());
+		
+		System.out.println("delete " + heap2.min.next.item.key);
+		heap2.delete(heap2.min.next.item);
+
+		System.out.println("delete " + heap2.min.item.key);
+		heap2.delete(heap2.min.item);
+
+	
+		//heap2.delete(heap2.min.child.item);
+
+		//heap2.delete(heap2.min.child.item);
+		HeapGraph.draw(heap2);
+		//heap2.printHeap();
+	}
 
 	public static void test_delete_min(){
 		BinomialHeap heap2 = new BinomialHeap();
@@ -77,5 +104,6 @@ public class Test {
 		//test_insert();
 		//test_meld();
 		//test_delete_min();
+		test_delete();
 	}
 }
