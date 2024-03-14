@@ -123,7 +123,7 @@ public class BinomialHeap
 	
 	public void Heapfy_Up(HeapNode Node) {
 		while(Node.parent!=null) {
-			if (Node.parent.item.key != 0 && Node.parent.item.key>=Node.item.key) {//if parent is larger then node switch
+			if (Node.parent.item.key != -1 && Node.parent.item.key > Node.item.key) {//if parent is larger then node switch
 				Node=Node.Switch_Nodes(Node.parent);//switches
 			}
 			else {//if its okey there is no reason to go up
@@ -155,10 +155,11 @@ public class BinomialHeap
 	 */
 	public void delete(HeapItem item) 
 	{    
-		this.decreaseKey(item,item.key);//the node is now head of a tree therfore it can be deleted like DeleteMin
+		this.decreaseKey(item,item.key+1);//the node is now head of a tree therfore it can be deleted like DeleteMin
 		HeapNode DNode = item.node;//the node i need to delete
 		this.min=DNode;
 		this.deleteMin();
+		this.Update_Min();
 		return;
 	}
 
@@ -192,7 +193,7 @@ public class BinomialHeap
 		
 		while (!heap2.empty()) {//if heap2 not empty because every run disconnects the first node
 			HeapNode Node_To_Meld=heap2.disconnect_single_tree(heap2.last.next); // the node to Meld
-			if (Node_To_Meld.item.key<this.min.item.key) {//updates this.min if needed
+			if (Node_To_Meld.item.key < this.min.item.key) {//updates this.min if needed
 				this.min=Node_To_Meld;
 			}
 			this.size = this.size + (int)(Math.pow(2, Node_To_Meld.rank));//updates the size
@@ -322,7 +323,14 @@ public class BinomialHeap
 	 */
 	public int numTrees()
 	{
-		return 0; // should be replaced by student code
+		int heap_size = this.size;
+		int trees_cnt = 0;
+		while (heap_size != 0){
+			if (heap_size % 2 == 1)
+				trees_cnt += 1;
+			heap_size = heap_size / 2;
+		}
+		return trees_cnt; // should be replaced by student code
 	}
 
 	//method to print, delete after
@@ -416,7 +424,7 @@ public class BinomialHeap
 			HeapNode New_Head; //the head will be the pionter returnd
 			HeapNode New_Child;
 
-			if (this.item.key < other.item.key) {//the head will be node with the smaller key
+			if (this.item.key <= other.item.key) {//the head will be node with the smaller key
 				New_Head=this;
 				New_Child=other;
 			}
@@ -435,26 +443,39 @@ public class BinomialHeap
 				NextNode = NextNode.next; //skip this next, take next to next (can be New Head itself or other sibling)
 			}
 
-			if(New_Head.rank!=0) {//if the rank isnt 0
+			//disconnect siblings pointers from new child
+			New_Child.prev.next = New_Child.next;
+			New_Child.next.prev = New_Child.prev;
+
+			if (New_Head.child != null){
 				//connecting the head of the tree to all the other nodes in his level.
+				
 				New_Child.prev=New_Head.child.prev;
 				New_Head.child.prev.next=New_Child;
 
 				New_Child.next=New_Head.child;
 				New_Head.child.prev = New_Child;
-
 			}
+
+			else{
+				New_Child.prev = New_Child; //point to itself
+				New_Child.next = New_Child;
+			}
+
 			//new parent for the new child
 			New_Child.parent=New_Head;
 			//setting the New_Child as child to be first
 			New_Head.child=New_Child;
-			//returning the tree to the list
-			PrevNode.next=New_Head;
-			New_Head.prev=PrevNode;
-			NextNode.prev=New_Head;
-			New_Head.next=NextNode;
+
 			//updating the rank
 			New_Head.rank++;
+			
+			//returning the tree to the list
+			PrevNode.next=New_Head;
+			NextNode.prev=New_Head;
+			New_Head.prev=PrevNode;
+			New_Head.next=NextNode;
+
 			return New_Head;
 		}
 		
