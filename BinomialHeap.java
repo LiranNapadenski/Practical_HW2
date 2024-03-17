@@ -63,7 +63,26 @@ public class BinomialHeap
 	{
 		BinomialHeap New_BinomialHeap = new BinomialHeap(key , info);
 		HeapItem item = New_BinomialHeap.last.item;
-		this.meld(New_BinomialHeap);
+		if (size == 0){
+			this.min = item.node;
+			this.last = item.node;
+			this.size++;
+			return item;
+		}
+		if (this.size % 2 == 0){
+			if (this.min.item.key > key){
+				this.min = item.node;
+			}
+			item.node.next = this.last.next;
+			item.node.prev = this.last;
+			
+			this.last.next = item.node;
+			item.node.next.prev = item.node;
+			this.size++;
+		}
+		else{
+			this.meld(New_BinomialHeap);
+		}
 		return item;
 	}
 
@@ -74,6 +93,9 @@ public class BinomialHeap
 	 */
 	public void deleteMin()
 	{
+		if (this.size == 0){
+			return;
+		}
 		HeapNode MinNode = this.disconnect_single_tree(this.min);//the node and its subtree disconnected from heap
 		BinomialHeap Heap_To_Meld= new BinomialHeap(MinNode.child , null ,(int)(Math.pow(2, MinNode.rank))-1);//creates an heap with the subtrees of min node as Nodes
 		if (MinNode.child != null)
@@ -212,6 +234,7 @@ public class BinomialHeap
 			this.last=Array_Of_Nodes[Array_Of_Nodes.length-1];
 		}
 		BinomialHeap.Connect_Node_Array(Array_Of_Nodes);
+		this.Update_Min();
 		return; // should be replaced by student code   		
 	}
 	
@@ -282,6 +305,7 @@ public class BinomialHeap
 			this.min=null;
 			return Node;
 		}
+
 		//Node has at least one sibling
 		if (this.min == Node) 
 			this.min = Node.next; //is it ok??? heap wont be functional anyway
