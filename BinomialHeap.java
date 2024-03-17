@@ -268,36 +268,7 @@ public class BinomialHeap
 		PrevNode.next=FirstNode;
 		FirstNode.prev=PrevNode;
 	}
-	
-	/**
-	 * disconnects the first node(tree) from heap and returns the node
-	 * @pre:!this.Empty()
-	 */
-	public HeapNode Disconnect_First() {
-		HeapNode FirstNode=this.last.next;
-		this.Disconnect(FirstNode);
-		return FirstNode;
-	}
-	
-	/**
-	 * Disconnects a given node from a tree and return the node
-	 * @return
-	 */
-	public HeapNode Disconnect(HeapNode Node) {
-		if (this.size ==1) {//if the heap has only 1 tree
-			this.last=null;
-			this.size=0;
-			this.min=null;
-			return Node;
-		}
-		HeapNode PrevFirst = Node.prev;
-		HeapNode NextFirst = Node.next;
-		//disconnected the node
-		PrevFirst.next=NextFirst;
-		NextFirst.prev=PrevFirst;
-		this.size--;//updates the size
-		return Node;
-	}
+
 
 	/**
 	 * Disconnects a given tree from a given root and return 
@@ -361,49 +332,6 @@ public class BinomialHeap
 			heap_size = heap_size / 2;
 		}
 		return trees_cnt; // should be replaced by student code
-	}
-
-	//method to print, delete after
-	public void printHeap() {
-        if (this.min == null) {
-            System.out.println("Heap is empty.");
-            return;
-        }
-
-        System.out.println("Binomial Heap:");
-
-		HeapNode first_in_row = this.min;
-        HeapNode current = this.min;
-
-
-		do{
-			printTree(current, 0);
-            current = current.next;
-		}
-        while (current != first_in_row);
-    }
-// delete after
-    private void printTree(HeapNode root, int depth) {
-        // Print the root node with appropriate indentation
-        for (int i = 0; i < depth; i++) {
-            System.out.print("  ");
-		}
-
-        System.out.println(root.item.key);
-
-        // Recursively print the child trees
-		HeapNode first_in_row = root.child;
-        HeapNode child = root.child;
-
-		if (child == null){
-			return;
-		}
-
-		do{
-			printTree(child, depth + 1);
-            child = child.next;
-		}
-        while (child != first_in_row);
 	}
 
 	/**
@@ -521,28 +449,6 @@ public class BinomialHeap
 			this.item.node=this;
 			return OtherNode;
 		}
-		//for testing
-		public HeapItem getItem() {
-			return this.item;
-		}
-		public HeapNode getNext() {
-			return this.next;
-		}
-		public int getRank() {
-			return this.rank;
-		}
-		public HeapNode getChild() {
-			return this.child;
-		}
-		public void setChild(HeapNode child) {
-			this.child=child;
-		}
-		public void setNext(HeapNode next) {
-			this.next=next;
-		}
-		public void setRank(int rank) {
-			this.rank=rank;
-		}
 	}
 
 	/**
@@ -561,10 +467,6 @@ public class BinomialHeap
 			this.key=key;
 			this.info=info;
 			this.node=node;
-		}
-		//for testing
-		public int getKey() {
-			return this.key;
 		}
 	}
 
